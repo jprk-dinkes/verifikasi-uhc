@@ -34,20 +34,6 @@ export default function LoginPage() {
         setLoading(false);
     };
 
-    const demoAccounts = [
-        { role: 'Super Admin', username: 'admin', password: 'admin123' },
-        { role: 'Verifikator Dinkes', username: 'dinkes1', password: 'dinkes123' },
-        { role: 'Verifikator BPJS', username: 'bpjs1', password: 'bpjs123' },
-        { role: 'Petugas RS', username: 'rs_hasan', password: 'rs123' },
-        { role: 'Petugas Puskesmas', username: 'pkm_cijambe', password: 'pkm123' }
-    ];
-
-    const fillDemo = (demo) => {
-        setUsername(demo.username);
-        setPassword(demo.password);
-        setError('');
-    };
-
     return (
         <div className="login-page">
             <div className="login-background">
@@ -131,22 +117,6 @@ export default function LoginPage() {
                             )}
                         </button>
                     </form>
-
-                    <div className="demo-accounts">
-                        <p className="demo-title">Demo Accounts:</p>
-                        <div className="demo-list">
-                            {demoAccounts.map((demo, index) => (
-                                <button
-                                    key={index}
-                                    className="demo-item"
-                                    onClick={() => fillDemo(demo)}
-                                >
-                                    <span className="demo-role">{demo.role}</span>
-                                    <span className="demo-creds">{demo.username}</span>
-                                </button>
-                            ))}
-                        </div>
-                    </div>
                 </div>
 
                 <p className="login-footer">

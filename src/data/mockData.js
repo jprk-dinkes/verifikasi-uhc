@@ -144,72 +144,9 @@ export const generateNoReg = () => {
 
 // Mock Pendaftaran Data
 export const generateMockPendaftaran = () => {
-  const names = [
-    'Ahmad Suryadi', 'Dewi Kartika', 'Budi Prasetyo', 'Siti Aminah', 'Eko Wijaya',
-    'Ratna Sari', 'Dedi Hermawan', 'Indah Permata', 'Agus Susanto', 'Rina Wulandari',
-    'Hasan Ibrahim', 'Mega Lestari', 'Yusuf Ahmad', 'Novi Anggraeni', 'Rizki Ramadan',
-    'Putri Handayani', 'Fajar Nugroho', 'Lina Marlina', 'Arif Hidayat', 'Wulan Maharani'
-  ];
-
-  const kelurahan = ['Sukajadi', 'Ciumbuleuit', 'Tamansari', 'Coblong', 'Cidadap', 'Dago', 'Hegarmanah'];
-  const kecamatan = ['Sukajadi', 'Ciumbuleuit', 'Bandung Wetan', 'Coblong', 'Cidadap'];
-
-  const data = [];
-  const startDate = new Date('2026-01-01');
-  const endDate = new Date('2026-02-03');
-
-  for (let i = 0; i < 50; i++) {
-    const faskes = mockFaskes[Math.floor(Math.random() * mockFaskes.length)];
-    const statusId = Math.floor(Math.random() * 6) + 1;
-    const tglMasuk = randomDate(startDate, endDate);
-    const tglInput = new Date(tglMasuk.getTime() + Math.random() * 86400000);
-
-    data.push({
-      id: `pend-${String(i + 1).padStart(4, '0')}`,
-      tgl_masuk: tglMasuk.toISOString(),
-      tgl_input_petugas: tglInput.toISOString(),
-      tgl_verif_dinkes: statusId >= 2 ? new Date(tglInput.getTime() + 86400000).toISOString() : null,
-      tgl_verif_bpjs: statusId >= 5 ? new Date(tglInput.getTime() + 172800000).toISOString() : null,
-
-      nama_pasien: names[Math.floor(Math.random() * names.length)],
-      nik_pasien: generateNIK(),
-      nama_kk: names[Math.floor(Math.random() * names.length)],
-      nik_kk: generateNIK(),
-      alamat: `Jl. ${kelurahan[Math.floor(Math.random() * kelurahan.length)]} No. ${Math.floor(Math.random() * 200) + 1}`,
-      rt: String(Math.floor(Math.random() * 10) + 1).padStart(2, '0'),
-      rw: String(Math.floor(Math.random() * 15) + 1).padStart(2, '0'),
-      kelurahan: kelurahan[Math.floor(Math.random() * kelurahan.length)],
-      kecamatan: kecamatan[Math.floor(Math.random() * kecamatan.length)],
-      no_telp: `08${Math.floor(Math.random() * 9000000000) + 1000000000}`,
-
-      tgl_masuk_rs: faskes.type === 'RS' ? tglMasuk.toISOString().split('T')[0] : null,
-      status_bpjs_awal: statusId >= 2 ? STATUS_BPJS_OPTIONS[Math.floor(Math.random() * STATUS_BPJS_OPTIONS.length)].value : null,
-      kelas_bpjs: statusId >= 2 ? KELAS_BPJS_OPTIONS[Math.floor(Math.random() * KELAS_BPJS_OPTIONS.length)].value : null,
-      jml_keluarga: statusId >= 2 ? Math.floor(Math.random() * 6) + 1 : null,
-      jml_didaftarkan: statusId >= 2 ? Math.floor(Math.random() * 4) + 1 : null,
-
-      file_ktp: '/mock/ktp.jpg',
-      file_kk: '/mock/kk.jpg',
-      file_surat_rawat: '/mock/surat_rawat.jpg',
-      file_pydopd: Math.random() > 0.3 ? '/mock/pydopd.pdf' : null,
-      file_sktm: Math.random() > 0.4 ? '/mock/sktm.pdf' : null,
-
-      status_id: statusId,
-      no_reg_dinkes: statusId >= 2 ? `REG-2602-${String(1000 + i).padStart(4, '0')}` : null,
-      no_bpjs: statusId === 5 ? `00${Math.floor(Math.random() * 9000000000) + 1000000000}` : null,
-      catatan_verif: [3, 4, 6].includes(statusId) ? 'Dokumen tidak lengkap, silakan upload ulang' : null,
-
-      id_faskes_pengusul: faskes.id,
-      nama_faskes: faskes.name,
-      tipe_faskes: faskes.type,
-      verifikator_dinkes_id: statusId >= 2 ? 'dinkes-001' : null,
-      verifikator_dinkes_name: statusId >= 2 ? 'Dr. Andi Wijaya' : null,
-      verifikator_bpjs_id: statusId >= 5 ? 'bpjs-001' : null,
-      verifikator_bpjs_name: statusId >= 5 ? 'Budi Santoso' : null
-    });
-  }
-
-  return data;
+  // Return empty array for production - data will be added by users
+  // Previously this generated 50 mock entries for demonstration
+  return [];
 };
 
 // --- DATA MANAGEMENT HELPERS ---
