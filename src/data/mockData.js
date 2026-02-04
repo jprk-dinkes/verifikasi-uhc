@@ -1,5 +1,71 @@
+// --- HELPER DATA ---
+const rsList = [
+  "RS ADVENT", "RS AL ISLAM BANDUNG", "KU NUR ILAHI", "RS BUNGSU", "RS EDELWEISS",
+  "KU BBKPM", "RS HUMANA PRIMA", "RS IMMANUEL", "RSJP PARAMARTA", "RS KARTINI",
+  "RS KEBONJATI", "RS KHUSUS GINJAL HABIBIE", "RS MELINDA 2", "RSKGM KOTA BANDUNG",
+  "RS MATA CICENDO", "RS MUHAMMADIYAH", "RS SARININGSIH", "RS MITRA KASIH",
+  "RS PINDAD", "RS SANTO BORROMEUS", "RS HERMINA ARCAMANIK", "RS SANTO YUSUP",
+  "RS SANTOSA CENTRAL", "RS SANTOSA KOPO", "RS DUSTIRA", "RSIA AL ISLAM AWIBITUNG",
+  "RSIA HARAPAN BUNDA", "RSJ PROVINSI JAWA BARAT", "RSU AVISENA", "RSUD CIBABAT",
+  "RSUD OTO ISKANDAR DINATA", "RS HERMINA PASTEUR", "RS ROTINSULU", "RS SALAMUN",
+  "RS SARTIKA ASIH", "RSUD WELAS ASIH", "RSUD BK", "RSUD KB", "RSUP HASAN SADIKIN"
+];
+
+const pkmList = [
+  "UPTD PUSKESMAS AHMAD YANI", "UPTD PUSKESMAS ANTAPANI", "UPTD PUSKESMAS ARCAMANIK", "UPTD PUSKESMAS ASTANAANYAR",
+  "UPTD PUSKESMAS BABAKAN SARI", "UPTD PUSKESMAS BABAKAN SURABAYA", "UPTD PUSKESMAS BABAKAN TAROGONG", "UPTD PUSKESMAS BABATAN",
+  "UPTD PUSKESMAS BALAIKOTA", "UPTD PUSKESMAS CARINGIN", "UPTD PUSKESMAS CEMPAKA ARUM", "UPTD PUSKESMAS CIBADUYUT KIDUL",
+  "UPTD PUSKESMAS CIBADUYUT WETAN", "UPTD PUSKESMAS CIBIRU", "UPTD PUSKESMAS CIBOLERANG", "UPTD PUSKESMAS CIBUNTU",
+  "UPTD PUSKESMAS CIGADUNG", "UPTD PUSKESMAS CIGONDEWAH", "UPTD PUSKESMAS CIJAGRA BARU", "UPTD PUSKESMAS CIJAGRA LAMA",
+  "UPTD PUSKESMAS CIJERAH", "UPTD PUSKESMAS CIKUTRA LAMA", "UPTD PUSKESMAS CILENGKRANG", "UPTD PUSKESMAS CINAMBO",
+  "UPTD PUSKESMAS CIPADUNG", "UPTD PUSKESMAS CIPAKU", "UPTD PUSKESMAS CIPAMOKOLAN", "UPTD PUSKESMAS CITARIP",
+  "UPTD PUSKESMAS CIUMBULEUIT", "UPTD PUSKESMAS DAGO", "UPTD PUSKESMAS DERWATI", "UPTD PUSKESMAS GARUDA",
+  "UPTD PUSKESMAS GIRIMANDE", "UPTD PUSKESMAS GRIYA ANTAPANI", "UPTD PUSKESMAS GUMURUH", "UPTD PUSKESMAS IBRAHIM ADJIE",
+  "UPTD PUSKESMAS JAJAWAY", "UPTD PUSKESMAS JATIHANDAP", "UPTD PUSKESMAS KARANGSETRA", "UPTD PUSKESMAS KOPO",
+  "UPTD PUSKESMAS KUJANGSARI", "UPTD PUSKESMAS LEDENG", "UPTD PUSKESMAS LIO GENTENG", "UPTD PUSKESMAS MANDALA MEKAR",
+  "UPTD PUSKESMAS MARGAHAYU RAYA", "UPTD PUSKESMAS MENGGER", "UPTD PUSKESMAS NEGLASARI", "UPTD PUSKESMAS PADASUKA",
+  "UPTD PUSKESMAS PAGARSIH", "UPTD PUSKESMAS PAMULANG", "UPTD PUSKESMAS PANGHEGAR", "UPTD PUSKESMAS PANYILEUKAN",
+  "UPTD PUSKESMAS PASAWAHAN", "UPTD PUSKESMAS PASIR JATI", "UPTD PUSKESMAS PASIRKALIKI", "UPTD PUSKESMAS PASIRLAYUNG",
+  "UPTD PUSKESMAS PASIRLUYU", "UPTD PUSKESMAS PASUNDAN", "UPTD PUSKESMAS PELINDUNG HEWAN", "UPTD PUSKESMAS PUTER",
+  "UPTD PUSKESMAS RAMDAN", "UPTD PUSKESMAS RIUNG BANDUNG", "UPTD PUSKESMAS RUSUNAWA", "UPTD PUSKESMAS SALAM",
+  "UPTD PUSKESMAS SARIJADI", "UPTD PUSKESMAS SEKEJATI", "UPTD PUSKESMAS SEKELOA", "UPTD PUSKESMAS SINDANGJAYA",
+  "UPTD PUSKESMAS SUKAGALIH", "UPTD PUSKESMAS SUKAHAJI", "UPTD PUSKESMAS SUKAJADI", "UPTD PUSKESMAS SUKAPAKIR",
+  "UPTD PUSKESMAS SUKARAJA", "UPTD PUSKESMAS SUKARASA", "UPTD PUSKESMAS SUKAWARNA", "UPTD PUSKESMAS SURYALAYA",
+  "UPTD PUSKESMAS TALAGABODAS", "UPTD PUSKESMAS TAMANSARI", "UPTD PUSKESMAS TAMBLONG", "UPTD PUSKESMAS UJUNG BERUNG INDAH"
+];
+
+// Generate Faskes Data
+const generateFaskesData = () => {
+  const faskes = [];
+
+  // RS
+  rsList.forEach((name, idx) => {
+    faskes.push({
+      id: `faskes-rs-${String(idx + 1).padStart(3, '0')}`,
+      name: name,
+      type: 'RS',
+      address: 'Bandung'
+    });
+  });
+
+  // PKM
+  pkmList.forEach((name, idx) => {
+    faskes.push({
+      id: `faskes-pkm-${String(idx + 1).padStart(3, '0')}`,
+      name: name,
+      type: 'PKM',
+      address: 'Bandung'
+    });
+  });
+
+  return faskes;
+};
+
+export const mockFaskes = generateFaskesData();
+
 // Mock Users Database
 export const initialMockUsers = [
+  // Super Admin
   {
     id: 'admin-001',
     username: 'admin',
@@ -7,88 +73,79 @@ export const initialMockUsers = [
     role: 'super_admin',
     name: 'Super Administrator'
   },
+
+  // Verifikator Dinkes
   {
     id: 'dinkes-001',
-    username: 'dinkes1',
-    password: 'dinkes123',
+    username: 'rizqia_wildiany',
+    password: 'verif2026',
     role: 'verifikator_dinkes',
-    name: 'Dr. Andi Wijaya'
+    name: 'Rizqia Wildiany'
   },
   {
     id: 'dinkes-002',
-    username: 'dinkes2',
-    password: 'dinkes123',
+    username: 'martina_riswanty',
+    password: 'verif2026',
     role: 'verifikator_dinkes',
-    name: 'Dr. Siti Rahayu'
+    name: 'Martina Riswanty'
   },
+
+  // Verifikator BPJS
   {
     id: 'bpjs-001',
-    username: 'bpjs1',
-    password: 'bpjs123',
+    username: 'hurin_nasywa',
+    password: 'bpjs12345',
     role: 'verifikator_bpjs',
-    name: 'Budi Santoso'
+    name: 'Hurin Nasywa'
   },
-  {
-    id: 'rs-001',
-    username: 'rs_hasan',
-    password: 'rs123',
-    role: 'faskes_rs',
-    name: 'Petugas RSUD Hasan Sadikin',
-    faskesId: 'faskes-rs-001',
-    faskesName: 'RSUD Hasan Sadikin'
-  },
-  {
-    id: 'rs-002',
-    username: 'rs_borromeus',
-    password: 'rs123',
-    role: 'faskes_rs',
-    name: 'Petugas RS Borromeus',
-    faskesId: 'faskes-rs-002',
-    faskesName: 'RS Borromeus'
-  },
-  {
-    id: 'pkm-001',
-    username: 'pkm_cijambe',
-    password: 'pkm123',
-    role: 'faskes_pkm',
-    name: 'Petugas Puskesmas Cijambe',
-    faskesId: 'faskes-pkm-001',
-    faskesName: 'Puskesmas Cijambe'
-  },
-  {
-    id: 'pkm-002',
-    username: 'pkm_ciumbuleuit',
-    password: 'pkm123',
-    role: 'faskes_pkm',
-    name: 'Petugas Puskesmas Ciumbuleuit',
-    faskesId: 'faskes-pkm-002',
-    faskesName: 'Puskesmas Ciumbuleuit'
-  },
-  {
-    id: 'fo-001',
-    username: 'fo123',
-    password: 'fo123',
-    role: 'front_office',
-    name: 'Staf Front Office'
-  }
+
+  // Users for Users from RS and PKM generated below...
 ];
 
-// Compatibility wrapper for existing code that imports mockUsers directly
-// In a real app, we would force everyone to use getMockUsers(), but for now we'll export a getter-like object or just valid array
-// Since ES6 exports are static, we'll keep exporting the initial array but provide functions to get the "real" state
-// Ideally, refactor consumers to use getMockUsers(). For minimal breakage, we initialize local storage immediately.
+// Combine basic users with generated users
+const generateFaskesUsers = () => {
+  const users = [];
 
-// Mock Faskes Database
-export const mockFaskes = [
-  { id: 'faskes-rs-001', name: 'RSUD Hasan Sadikin', type: 'RS', address: 'Jl. Pasteur No. 38, Bandung' },
-  { id: 'faskes-rs-002', name: 'RS Borromeus', type: 'RS', address: 'Jl. Ir. H. Juanda No. 100, Bandung' },
-  { id: 'faskes-rs-003', name: 'RSUP Dr. Hasan Sadikin', type: 'RS', address: 'Jl. Pasteur No. 38, Bandung' },
-  { id: 'faskes-rs-004', name: 'RS Santo Yusup', type: 'RS', address: 'Jl. Cikutra No. 7, Bandung' },
-  { id: 'faskes-pkm-001', name: 'Puskesmas Cijambe', type: 'PKM', address: 'Jl. Cijambe No. 25, Bandung' },
-  { id: 'faskes-pkm-002', name: 'Puskesmas Ciumbuleuit', type: 'PKM', address: 'Jl. Ciumbuleuit No. 46, Bandung' },
-  { id: 'faskes-pkm-003', name: 'Puskesmas Sukajadi', type: 'PKM', address: 'Jl. Sukajadi No. 112, Bandung' },
-  { id: 'faskes-pkm-004', name: 'Puskesmas Tamansari', type: 'PKM', address: 'Jl. Tamansari No. 56, Bandung' }
-];
+  // Generate RS Users
+  rsList.forEach((name, idx) => {
+    // Username: rs_advent, rs_al_islam_bandung (lowercase, underscores)
+    const username = name.toLowerCase().replace(/ /g, '_').replace(/\./g, '');
+    const faskesId = `faskes-rs-${String(idx + 1).padStart(3, '0')}`;
+
+    users.push({
+      id: `user-rs-${String(idx + 1).padStart(3, '0')}`,
+      username: username,
+      password: 'rs12345',
+      role: 'faskes_rs',
+      name: `Petugas ${name}`,
+      faskesId: faskesId,
+      faskesName: name
+    });
+  });
+
+  // Generate PKM Users
+  pkmList.forEach((name, idx) => {
+    // Username: pkm_ahmad_yani (remove 'UPTD PUSKESMAS ', lowercase, underscore)
+    // Clean name for username
+    const cleanName = name.replace('UPTD PUSKESMAS ', 'PKM ');
+    const username = cleanName.toLowerCase().replace(/ /g, '_');
+    const faskesId = `faskes-pkm-${String(idx + 1).padStart(3, '0')}`;
+
+    users.push({
+      id: `user-pkm-${String(idx + 1).padStart(3, '0')}`,
+      username: username,
+      password: 'pkm12345',
+      role: 'faskes_pkm',
+      name: `Petugas ${name}`,
+      faskesId: faskesId,
+      faskesName: name
+    });
+  });
+
+  return users;
+};
+
+initialMockUsers.push(...generateFaskesUsers());
 
 // Status Constants
 export const STATUS = {
