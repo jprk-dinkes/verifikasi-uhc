@@ -345,7 +345,7 @@ export default function VerificationModal({
                                                 onChange={handleChange}
                                                 className="form-select"
                                             >
-                                                {STATUS_BPJS_OPTIONS.map(opt => (
+                                                {(STATUS_BPJS_OPTIONS || []).map(opt => (
                                                     <option key={opt.value} value={opt.value}>{opt.label}</option>
                                                 ))}
                                             </select>
@@ -358,7 +358,7 @@ export default function VerificationModal({
                                                 onChange={handleChange}
                                                 className="form-select"
                                             >
-                                                {KELAS_BPJS_OPTIONS.map(opt => (
+                                                {(KELAS_BPJS_OPTIONS || []).map(opt => (
                                                     <option key={opt.value} value={opt.value}>{opt.label}</option>
                                                 ))}
                                             </select>
