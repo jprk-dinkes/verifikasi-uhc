@@ -1,0 +1,329 @@
+.dashboard-dinkes {
+    animation: fadeIn var(--transition-base);
+}
+
+/* Page Header with Date Filter */
+.page-header .header-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.date-filter {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    color: var(--text-muted);
+}
+
+.date-filter .form-select {
+    min-width: 180px;
+}
+
+/* Executive Stats */
+.executive-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.executive-stats .dashboard-card {
+    animation: fadeInUp var(--transition-base);
+}
+
+.executive-stats .dashboard-card:nth-child(1) {
+    animation-delay: 0.05s;
+    animation-fill-mode: both;
+}
+
+.executive-stats .dashboard-card:nth-child(2) {
+    animation-delay: 0.1s;
+    animation-fill-mode: both;
+}
+
+.executive-stats .dashboard-card:nth-child(3) {
+    animation-delay: 0.15s;
+    animation-fill-mode: both;
+}
+
+.executive-stats .dashboard-card:nth-child(4) {
+    animation-delay: 0.2s;
+    animation-fill-mode: both;
+}
+
+/* Status Overview Bar */
+.status-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    overflow: visible;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg) var(--spacing-md);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    transition: all var(--transition-base);
+    cursor: default;
+    box-shadow: var(--shadow-card);
+    position: relative;
+    overflow: hidden;
+}
+
+.status-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: currentColor;
+    opacity: 0.5;
+}
+
+.status-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.status-item.primary {
+    color: var(--primary);
+}
+
+.status-item.success {
+    color: var(--success);
+}
+
+.status-item.warning {
+    color: var(--warning);
+}
+
+.status-item.danger {
+    color: var(--danger);
+}
+
+.status-item.info {
+    color: var(--info);
+}
+
+.status-item svg {
+    width: 42px;
+    height: 42px;
+    padding: 10px;
+    border-radius: var(--radius-lg);
+    background: currentColor;
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.status-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.status-value {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+.status-label {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+/* Special Stats */
+.special-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.special-card {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+}
+
+.special-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.special-icon.primary {
+    background: var(--primary-bg);
+    color: var(--primary);
+}
+
+.special-icon.info {
+    background: var(--info-bg);
+    color: var(--info);
+}
+
+.special-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.special-value {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1;
+}
+
+.special-title {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-top: var(--spacing-xs);
+}
+
+.special-desc {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+}
+
+/* Charts Section */
+.charts-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.chart-main,
+.chart-side {
+    animation: fadeInUp var(--transition-base);
+    animation-delay: 0.3s;
+    animation-fill-mode: both;
+}
+
+.chart-side {
+    animation-delay: 0.35s;
+}
+
+/* Bottom Grid */
+.bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+}
+
+.chart-workload {
+    animation: fadeInUp var(--transition-base);
+    animation-delay: 0.4s;
+    animation-fill-mode: both;
+}
+
+/* Top Faskes Card */
+.top-faskes-card {
+    overflow: hidden;
+}
+
+.top-faskes-card .table-container {
+    overflow-x: auto;
+}
+
+.top-faskes-card table {
+    min-width: 100%;
+}
+
+.rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+}
+
+.rank-badge.rank-1 {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: white;
+}
+
+.rank-badge.rank-2 {
+    background: linear-gradient(135deg, #C0C0C0, #A0A0A0);
+    color: white;
+}
+
+.rank-badge.rank-3 {
+    background: linear-gradient(135deg, #CD7F32, #A0522D);
+    color: white;
+}
+
+.rank-badge.rank-4,
+.rank-badge.rank-5 {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .executive-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .charts-section {
+        grid-template-columns: 1fr;
+    }
+
+    .bottom-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-header .header-content {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .date-filter {
+        width: 100%;
+    }
+
+    .date-filter .form-select {
+        flex: 1;
+    }
+
+    .executive-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .status-overview {
+        flex-direction: column;
+    }
+
+    .status-item {
+        min-width: auto;
+    }
+
+    .special-stats {
+        grid-template-columns: 1fr;
+    }
+}

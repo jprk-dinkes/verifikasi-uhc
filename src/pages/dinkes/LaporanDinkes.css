@@ -1,0 +1,180 @@
+.laporan-page {
+    animation: fadeIn var(--transition-base);
+}
+
+.filter-panel {
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    animation: fadeInUp var(--transition-base);
+}
+
+.filter-row {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    min-width: 180px;
+}
+
+.filter-group .form-label {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+/* Summary Cards */
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.summary-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    transition: all var(--transition-base);
+    position: relative;
+    overflow: hidden;
+}
+
+.summary-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--card-color, var(--primary));
+}
+
+.summary-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.summary-card:nth-child(1) {
+    animation: fadeInUp var(--transition-base);
+    animation-delay: 0.05s;
+    animation-fill-mode: both;
+}
+
+.summary-card:nth-child(2) {
+    animation: fadeInUp var(--transition-base);
+    animation-delay: 0.1s;
+    animation-fill-mode: both;
+    --card-color: var(--success);
+}
+
+.summary-card:nth-child(3) {
+    animation: fadeInUp var(--transition-base);
+    animation-delay: 0.15s;
+    animation-fill-mode: both;
+    --card-color: var(--warning);
+}
+
+.summary-card:nth-child(4) {
+    animation: fadeInUp var(--transition-base);
+    animation-delay: 0.2s;
+    animation-fill-mode: both;
+    --card-color: var(--danger);
+}
+
+.summary-card:nth-child(5) {
+    animation: fadeInUp var(--transition-base);
+    animation-delay: 0.25s;
+    animation-fill-mode: both;
+    --card-color: var(--info);
+}
+
+.summary-icon {
+    width: 48px;
+    height: 48px;
+    color: var(--primary);
+}
+
+.summary-value {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    display: block;
+}
+
+.summary-card.success .summary-value {
+    color: var(--success);
+}
+
+.summary-card.warning .summary-value {
+    color: var(--warning);
+}
+
+.summary-card.danger .summary-value {
+    color: var(--danger);
+}
+
+.summary-card.info .summary-value {
+    color: var(--info);
+}
+
+.summary-label {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Preview Section */
+.preview-section {
+    animation: fadeInUp var(--transition-base);
+    animation-delay: 0.3s;
+    animation-fill-mode: both;
+}
+
+.preview-section h3 {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    color: var(--primary);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .summary-cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .filter-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-group {
+        min-width: 100%;
+    }
+
+    .summary-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .summary-cards {
+        grid-template-columns: 1fr;
+    }
+}

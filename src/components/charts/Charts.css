@@ -1,0 +1,62 @@
+.chart-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-card);
+}
+
+.chart-title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.chart-title::before {
+    content: '';
+    width: 4px;
+    height: 18px;
+    background: var(--primary-gradient);
+    border-radius: var(--radius-sm);
+}
+
+/* Recharts custom styling */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+    stroke: var(--border);
+}
+
+.recharts-tooltip-wrapper {
+    filter: drop-shadow(var(--shadow-md));
+}
+
+.recharts-legend-wrapper {
+    padding-top: var(--spacing-md) !important;
+}
+
+.recharts-legend-item-text {
+    color: var(--text-secondary) !important;
+    font-size: var(--font-size-xs) !important;
+}
+
+.recharts-pie-label-text {
+    font-size: 10px;
+    fill: var(--text-secondary);
+}
+
+/* Card header for chart */
+.chart-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-md);
+}
+
+.chart-actions {
+    display: flex;
+    gap: var(--spacing-xs);
+}
