@@ -25,7 +25,8 @@ export default function VerificationModal({
     data,
     onClose,
     onVerify,
-    type = 'dinkes' // 'dinkes' or 'bpjs'
+    type = 'dinkes', // 'dinkes' or 'bpjs'
+    readOnly = false
 }) {
     const [formData, setFormData] = useState({
         nama_kk: data?.nama_kk || '',
@@ -450,7 +451,7 @@ export default function VerificationModal({
                             </div>
 
                             {/* Verification Result Summary - Show if ReadOnly or Already Verified */}
-                            {(props.readOnly || isAlreadyVerified) && (
+                            {(readOnly || isAlreadyVerified) && (
                                 <div className="section-group result-section animate-fade-in-up stagger-3">
                                     <h3 className="section-title">
                                         <CheckCircle size={16} />
@@ -497,7 +498,7 @@ export default function VerificationModal({
                             )}
 
                             {/* Verification Actions - Only if not readOnly */}
-                            {!props.readOnly && (
+                            {!readOnly && (
                                 <div className="section-group actions-section animate-fade-in-up stagger-3">
                                     <h3 className="section-title">
                                         <Edit3 size={16} />
