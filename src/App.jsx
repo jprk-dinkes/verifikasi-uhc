@@ -34,6 +34,9 @@ import ManajemenFaskes from './pages/admin/ManajemenFaskes';
 // Front Office Pages
 import DashboardFrontOffice from './pages/front-office/DashboardFrontOffice';
 
+// Migration Tool
+import FirebaseMigration from './pages/admin/FirebaseMigration';
+
 function App() {
   return (
     <AuthProvider>
@@ -42,6 +45,7 @@ function App() {
           {/* Public Route */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/setup-firebase" element={<FirebaseMigration />} />
 
           {/* Redirect root to login */}
           <Route path="/" element={<Navigate to="/login" replace />} />
