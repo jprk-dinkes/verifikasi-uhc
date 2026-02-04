@@ -212,12 +212,12 @@ export const generateMockPendaftaran = () => {
 let mockPendaftaran = null;
 export const getMockPendaftaran = () => {
   if (!mockPendaftaran) {
-    const stored = localStorage.getItem('uhc_pendaftaran_v2');
+    const stored = localStorage.getItem('uhc_pendaftaran_v3');
     if (stored) {
       mockPendaftaran = JSON.parse(stored);
     } else {
       mockPendaftaran = generateMockPendaftaran();
-      localStorage.setItem('uhc_pendaftaran_v2', JSON.stringify(mockPendaftaran));
+      localStorage.setItem('uhc_pendaftaran_v3', JSON.stringify(mockPendaftaran));
     }
   }
   return mockPendaftaran;
@@ -225,7 +225,7 @@ export const getMockPendaftaran = () => {
 
 export const savePendaftaran = (data) => {
   mockPendaftaran = data;
-  localStorage.setItem('uhc_pendaftaran_v2', JSON.stringify(data));
+  localStorage.setItem('uhc_pendaftaran_v3', JSON.stringify(data));
 };
 
 export const addPendaftaran = (newEntry) => {
@@ -250,12 +250,12 @@ let usersCache = null;
 
 export const getMockUsers = () => {
   if (!usersCache) {
-    const stored = localStorage.getItem('uhc_users_v2');
+    const stored = localStorage.getItem('uhc_users_v3');
     if (stored) {
       usersCache = JSON.parse(stored);
     } else {
       usersCache = [...initialMockUsers];
-      localStorage.setItem('uhc_users_v2', JSON.stringify(usersCache));
+      localStorage.setItem('uhc_users_v3', JSON.stringify(usersCache));
     }
   }
   return usersCache;
@@ -263,7 +263,7 @@ export const getMockUsers = () => {
 
 export const saveMockUsers = (users) => {
   usersCache = users;
-  localStorage.setItem('uhc_users_v2', JSON.stringify(users));
+  localStorage.setItem('uhc_users_v3', JSON.stringify(users));
   // Also update the exported constant if possible, or consumers should use getMockUsers()
 };
 
@@ -292,8 +292,8 @@ export const deleteUser = (id) => {
 };
 
 export const resetMockData = () => {
-  localStorage.removeItem('uhc_pendaftaran_v2');
-  localStorage.removeItem('uhc_users_v2');
+  localStorage.removeItem('uhc_pendaftaran_v3');
+  localStorage.removeItem('uhc_users_v3');
   mockPendaftaran = null;
   usersCache = null;
   return {
