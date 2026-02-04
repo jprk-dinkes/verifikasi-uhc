@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Save, Upload, Check } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { addPendaftaran, getMockPendaftaran } from '../../data/mockData';
+import { uploadToCloudinary } from '../../services/cloudinary';
 import './FormPendaftaran.css';
 
 export default function FormPendaftaran() {
@@ -100,56 +101,77 @@ export default function FormPendaftaran() {
 
         setLoading(true);
 
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        try {
+            // Upload files to Cloudinary
+            const uploadPromises = [
+                formData.file_ktp ? uploadToCloudinary(formData.file_ktp) : Promise.resolve(null),
+                formData.file_kk ? uploadToCloudinary(formData.file_kk) : Promise.resolve(null),
+                formData.file_surat_rawat ? uploadToCloudinary(formData.file_surat_rawat) : Promise.resolve(null),
+                formData.file_pydopd ? uploadToCloudinary(formData.file_pydopd) : Promise.resolve(null),
+                formData.file_sktm ? uploadToCloudinary(formData.file_sktm) : Promise.resolve(null)
+            ];
 
-        const newEntry = {
-            id: `pend-${Date.now()}`,
-            tgl_masuk: new Date().toISOString(),
-            tgl_input_petugas: new Date().toISOString(),
-            tgl_verif_dinkes: null,
-            tgl_verif_bpjs: null,
+            const [
+                url_ktp,
+                url_kk,
+                url_surat_rawat,
+                url_pydopd,
+                url_sktm
+            ] = await Promise.all(uploadPromises);
 
-            nama_pasien: formData.nama_pasien,
-            nik_pasien: formData.nik_pasien,
-            nama_kk: formData.nama_kk,
-            nik_kk: formData.nik_kk,
-            alamat: formData.alamat,
-            rt: formData.rt,
-            rw: formData.rw,
-            kelurahan: formData.kelurahan,
-            kecamatan: formData.kecamatan,
-            no_telp: formData.no_telp,
+            const newEntry = {
+                id: `pend-${Date.now()}`,
+                tgl_masuk: new Date().toISOString(),
+                tgl_input_petugas: new Date().toISOString(),
+                tgl_verif_dinkes: null,
+                tgl_verif_bpjs: null,
 
-            tgl_masuk_rs: formData.tgl_masuk_rs || null,
-            // These fields are only filled by Dinkes verifikator
-            status_bpjs_awal: null,
-            kelas_bpjs: null,
-            jml_keluarga: null,
-            jml_didaftarkan: null,
+                nama_pasien: formData.nama_pasien,
+                nik_pasien: formData.nik_pasien,
+                nama_kk: formData.nama_kk,
+                nik_kk: formData.nik_kk,
+                alamat: formData.alamat,
+                rt: formData.rt,
+                rw: formData.rw,
+                kelurahan: formData.kelurahan,
+                kecamatan: formData.kecamatan,
+                no_telp: formData.no_telp,
 
-            file_ktp: '/mock/ktp.jpg',
-            file_kk: '/mock/kk.jpg',
-            file_surat_rawat: '/mock/surat_rawat.jpg',
-            file_pydopd: formData.file_pydopd ? '/mock/pydopd.pdf' : null,
-            file_sktm: formData.file_sktm ? '/mock/sktm.pdf' : null,
+                tgl_masuk_rs: formData.tgl_masuk_rs || null,
+                status_bpjs_awal: null,
+                kelas_bpjs: null,
+                jml_keluarga: null,
+                jml_didaftarkan: null,
 
-            status_id: 1,
-            no_reg_dinkes: null,
-            no_bpjs: null,
-            catatan_verif: formData.catatan || null,
+                // Use the returned Cloudinary URLs
+                file_ktp: url_ktp || null,
+                file_kk: url_kk || null,
+                file_surat_rawat: url_surat_rawat || null,
+                file_pydopd: url_pydopd || null,
+                file_sktm: url_sktm || null,
 
-            id_faskes_pengusul: user?.faskesId,
-            nama_faskes: user?.faskesName,
-            tipe_faskes: isRS ? 'RS' : 'PKM',
-            verifikator_dinkes_id: null,
-            verifikator_dinkes_name: null,
-            verifikator_bpjs_id: null,
-            verifikator_bpjs_name: null
-        };
+                status_id: 1,
+                no_reg_dinkes: null,
+                no_bpjs: null,
+                catatan_verif: formData.catatan || null,
 
-        addPendaftaran(newEntry);
-        setLoading(false);
-        setSubmitted(true);
+                id_faskes_pengusul: user?.faskesId,
+                nama_faskes: user?.faskesName,
+                tipe_faskes: isRS ? 'RS' : 'PKM',
+                verifikator_dinkes_id: null,
+                verifikator_dinkes_name: null,
+                verifikator_bpjs_id: null,
+                verifikator_bpjs_name: null
+            };
+
+            addPendaftaran(newEntry);
+            setLoading(false);
+            setSubmitted(true);
+        } catch (error) {
+            console.error("Upload error:", error);
+            alert("Gagal mengupload dokumen. Pastikan koneksi internet lancar dan konfigurasi Cloudinary benar.");
+            setLoading(false);
+        }
     };
 
     const resetForm = () => {
@@ -403,7 +425,7 @@ export default function FormPendaftaran() {
                                     onChange={handleChange}
                                 />
                                 <Upload size={20} />
-                                <span>{formData.file_ktp?.name || 'Pilih file KTP'}</span>
+                                <span className="file-name-display">{formData.file_ktp?.name || 'Pilih file KTP'}</span>
                             </div>
                             {errors.file_ktp && <span className="form-error">{errors.file_ktp}</span>}
                         </div>
@@ -418,7 +440,7 @@ export default function FormPendaftaran() {
                                     onChange={handleChange}
                                 />
                                 <Upload size={20} />
-                                <span>{formData.file_kk?.name || 'Pilih file KK'}</span>
+                                <span className="file-name-display">{formData.file_kk?.name || 'Pilih file KK'}</span>
                             </div>
                             {errors.file_kk && <span className="form-error">{errors.file_kk}</span>}
                         </div>
@@ -433,7 +455,7 @@ export default function FormPendaftaran() {
                                     onChange={handleChange}
                                 />
                                 <Upload size={20} />
-                                <span>{formData.file_surat_rawat?.name || 'Pilih file'}</span>
+                                <span className="file-name-display">{formData.file_surat_rawat?.name || 'Pilih file'}</span>
                             </div>
                             {errors.file_surat_rawat && <span className="form-error">{errors.file_surat_rawat}</span>}
                         </div>
@@ -448,7 +470,7 @@ export default function FormPendaftaran() {
                                     onChange={handleChange}
                                 />
                                 <Upload size={20} />
-                                <span>{formData.file_pydopd?.name || 'Pilih file (opsional)'}</span>
+                                <span className="file-name-display">{formData.file_pydopd?.name || 'Pilih file (opsional)'}</span>
                             </div>
                         </div>
 
@@ -462,7 +484,7 @@ export default function FormPendaftaran() {
                                     onChange={handleChange}
                                 />
                                 <Upload size={20} />
-                                <span>{formData.file_sktm?.name || 'Pilih file (opsional)'}</span>
+                                <span className="file-name-display">{formData.file_sktm?.name || 'Pilih file (opsional)'}</span>
                             </div>
                         </div>
                     </div>

@@ -603,16 +603,49 @@ export default function VerificationModal({
                     <div className="doc-viewer-content" onClick={e => e.stopPropagation()}>
                         <div className="doc-viewer-header">
                             <h3>{viewDoc.label}</h3>
-                            <button className="close-viewer" onClick={() => setViewDoc(null)}>
-                                <X size={20} />
-                            </button>
+                            <div className="doc-actions">
+                                {data[viewDoc.key] && (typeof data[viewDoc.key] === 'string') && (
+                                    <a href={data[viewDoc.key]} target="_blank" rel="noreferrer" className="open-new-tab">
+                                        Buka di Tab Baru <ChevronRight size={14} />
+                                    </a>
+                                )}
+                                <button className="close-viewer" onClick={() => setViewDoc(null)}>
+                                    <X size={20} />
+                                </button>
+                            </div>
                         </div>
                         <div className="doc-viewer-body">
-                            <div className="doc-placeholder">
-                                <FileText size={48} />
-                                <p>Preview Dokumen {viewDoc.label}</p>
-                                <span className="doc-note">File demo preview</span>
-                            </div>
+                            {(() => {
+                                const fileUrl = data[viewDoc.key];
+                                if (!fileUrl) {
+                                    return (
+                                        <div className="doc-placeholder">
+                                            <AlertCircle size={48} />
+                                            <p>File tidak ditemukan</p>
+                                        </div>
+                                    );
+                                }
+
+                                const isPdf = typeof fileUrl === 'string' && fileUrl.toLowerCase().endsWith('.pdf');
+                                const isImage = typeof fileUrl === 'string' && (fileUrl.match(/\.(jpeg|jpg|gif|png|webp)$/i) != null || !isPdf);
+                                // Assume image if not PDF and is string, or Cloudinary URL without extension (usually image)
+
+                                if (isPdf) {
+                                    return (
+                                        <iframe
+                                            src={fileUrl}
+                                            title={viewDoc.label}
+                                            className="doc-frame"
+                                        />
+                                    );
+                                } else {
+                                    return (
+                                        <div className="doc-image-container">
+                                            <img src={fileUrl} alt={viewDoc.label} className="doc-image" />
+                                        </div>
+                                    );
+                                }
+                            })()}
                         </div>
                     </div>
                 </div>
