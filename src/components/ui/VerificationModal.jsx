@@ -27,13 +27,30 @@ export default function VerificationModal({
     onVerify,
     type = 'dinkes' // 'dinkes' or 'bpjs'
 }) {
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState({
+        nama_kk: data?.nama_kk || '',
+        nik_kk: data?.nik_kk || '',
+        nama_pasien: data?.nama_pasien || '',
+        nik_pasien: data?.nik_pasien || '',
+        alamat: data?.alamat || '',
+        rt: data?.rt || '',
+        rw: data?.rw || '',
+        kelurahan: data?.kelurahan || '',
+        kecamatan: data?.kecamatan || '',
+        no_telp: data?.no_telp || '',
+        tgl_masuk_rs: data?.tgl_masuk_rs || '',
+        status_bpjs_awal: data?.status_bpjs_awal || 'BARU',
+        kelas_bpjs: data?.kelas_bpjs || '-',
+        jml_keluarga: data?.jml_keluarga || 1,
+        jml_didaftarkan: data?.jml_didaftarkan || 1
+    });
+
     const [action, setAction] = useState('');
-    const [catatan, setCatatan] = useState('');
-    const [noBpjs, setNoBpjs] = useState('');
-    const [isEditing, setIsEditing] = useState(false);
+    const [catatan, setCatatan] = useState(data?.catatan_verif || '');
+    const [noBpjs, setNoBpjs] = useState(data?.no_bpjs || '');
+    const [isEditing, setIsEditing] = useState(data ? data.status_id > 1 : false);
     const [loading, setLoading] = useState(false);
-    const [viewDoc, setViewDoc] = useState(null); // State for viewing document
+    const [viewDoc, setViewDoc] = useState(null);
 
     useEffect(() => {
         if (data) {
@@ -56,7 +73,7 @@ export default function VerificationModal({
             });
             setCatatan(data.catatan_verif || '');
             setNoBpjs(data.no_bpjs || '');
-            // If already verified, enable editing mode
+
             setIsEditing(data.status_id > 1);
             if (data.status_id === 2 || data.status_id === 5) setAction(type === 'dinkes' ? 'lolos' : 'terbit');
             else if (data.status_id === 3 || data.status_id === 6) setAction('pending');
