@@ -12,13 +12,15 @@ import {
     ClipboardCheck,
     Shield,
     Menu,
-    X
+    X,
+    ChevronLeft,
+    ChevronRight,
 } from 'lucide-react';
 import { useState } from 'react';
 import './Sidebar.css';
 import dinkesLogo from '../../assets/logo-dinkes.png';
 
-export default function Sidebar() {
+export default function Sidebar({ collapsed, onToggle }) {
     const { user, logout, getRoleName } = useAuth();
     const location = useLocation();
     const [mobileOpen, setMobileOpen] = useState(false);
@@ -88,7 +90,16 @@ export default function Sidebar() {
             )}
 
             {/* Sidebar */}
-            <aside className={`sidebar ${mobileOpen ? 'open' : ''}`}>
+            <aside className={`sidebar ${mobileOpen ? 'open' : ''} ${collapsed ? 'collapsed' : ''}`}>
+                {/* Collapse Toggle */}
+                <button
+                    className="sidebar-toggle"
+                    onClick={onToggle}
+                    title={collapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+                >
+                    {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+                </button>
+
                 {/* Logo */}
                 <div className="sidebar-logo">
                     <div className="logo-content">
@@ -127,6 +138,7 @@ export default function Sidebar() {
                                 className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
                                 onClick={closeMobile}
                                 style={{ animationDelay: `${index * 0.05}s` }}
+                                data-tooltip={item.label}
                             >
                                 <item.icon className="nav-icon" size={18} />
                                 <span>{item.label}</span>
@@ -142,7 +154,7 @@ export default function Sidebar() {
                 <div className="sidebar-footer">
                     <button className="logout-btn" onClick={logout}>
                         <LogOut size={18} />
-                        Keluar
+                        <span>Keluar</span>
                     </button>
                     <div className="developer-credit">
                         Pengembang: <strong>Rafied Ridwan F, A.Md.RMIK</strong>

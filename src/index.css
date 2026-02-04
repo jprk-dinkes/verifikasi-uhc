@@ -98,6 +98,7 @@
 
   /* Layout */
   --sidebar-width: 260px;
+  --sidebar-collapsed-width: 80px;
   --header-height: 64px;
   --transition-fast: 150ms ease;
   --transition-base: 250ms ease;

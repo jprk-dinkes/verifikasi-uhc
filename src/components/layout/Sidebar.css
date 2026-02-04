@@ -434,10 +434,116 @@
 
     .sidebar {
         transform: translateX(-100%);
-        transition: transform var(--transition-base);
+        transition: transform var(--transition-base), width var(--transition-base);
     }
 
     .sidebar.open {
         transform: translateX(0);
     }
+}
+
+/* Collapsed Sidebar Styles */
+.sidebar.collapsed {
+    width: var(--sidebar-collapsed-width);
+}
+
+.sidebar.collapsed .logo-text,
+.sidebar.collapsed .user-info,
+.sidebar.collapsed .nav-section-title,
+.sidebar.collapsed .nav-link span:not(.nav-badge),
+.sidebar.collapsed .logout-btn span,
+.sidebar.collapsed .developer-credit {
+    display: none;
+    opacity: 0;
+}
+
+.sidebar.collapsed .logo-content {
+    justify-content: center;
+}
+
+.sidebar.collapsed .sidebar-logo,
+.sidebar.collapsed .sidebar-user,
+.sidebar.collapsed .sidebar-footer {
+    padding: var(--spacing-md) var(--spacing-sm);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sidebar.collapsed .user-card {
+    padding: 0;
+    background: transparent;
+    justify-content: center;
+}
+
+.sidebar.collapsed .user-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: var(--font-size-xs);
+}
+
+.sidebar.collapsed .nav-link {
+    justify-content: center;
+    padding: var(--spacing-md) var(--spacing-sm);
+}
+
+.sidebar.collapsed .nav-icon {
+    margin: 0;
+    width: 22px;
+    height: 22px;
+}
+
+.sidebar.collapsed .logout-btn {
+    justify-content: center;
+    padding: var(--spacing-md) var(--spacing-sm);
+}
+
+.sidebar-toggle {
+    position: absolute;
+    right: -12px;
+    top: 76px;
+    width: 24px;
+    height: 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    z-index: 101;
+    transition: all var(--transition-fast);
+}
+
+.sidebar-toggle:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* Tooltip for collapsed items */
+.sidebar.collapsed .nav-link {
+    position: relative;
+}
+
+.sidebar.collapsed .nav-link:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--popover);
+    color: var(--popover-foreground);
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-xs);
+    white-space: nowrap;
+    margin-left: var(--spacing-sm);
+    box-shadow: var(--shadow-md);
+    z-index: 200;
+    opacity: 1;
+    animation: fadeIn 0.2s ease-out;
 }

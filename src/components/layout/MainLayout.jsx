@@ -12,6 +12,7 @@ export default function MainLayout({ allowedRoles }) {
     const { user, loading, isAuthenticated, logout } = useAuth();
     const navigate = useNavigate();
     const [showSearch, setShowSearch] = useState(false);
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [lastActivity, setLastActivity] = useState(Date.now());
 
     // Session timeout handler
@@ -76,9 +77,9 @@ export default function MainLayout({ allowedRoles }) {
     }
 
     return (
-        <div className="main-layout">
-            <Sidebar />
-            <main className="main-content">
+        <div className={`main-layout ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
+            <Sidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed(!sidebarCollapsed)} />
+            <main className="main-content" style={{ marginLeft: sidebarCollapsed ? 'var(--sidebar-collapsed-width)' : 'var(--sidebar-width)', transition: 'margin-left 0.3s ease' }}>
                 {/* Top Header with Global Search */}
                 <header className="main-header">
                     <div className="header-search">
