@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import {
     Users,
     Building2,
@@ -16,16 +16,33 @@ import {
 } from 'lucide-react';
 import DashboardCard from '../../components/ui/DashboardCard';
 import { TrendChart, BarChartComponent, PieChartComponent } from '../../components/charts/Charts';
-import { getMockPendaftaran, STATUS } from '../../data/mockData';
+import { fetchPendaftaran } from '../../services/pendaftaranService';
+import { STATUS } from '../../data/mockData';
 import { useAuth } from '../../contexts/AuthContext';
 import './DashboardDinkes.css';
 
 export default function DashboardDinkes() {
     const { user } = useAuth();
     const [dateFilter, setDateFilter] = useState('all');
+    const [originalData, setOriginalData] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                const data = await fetchPendaftaran();
+                setOriginalData(data);
+            } catch (error) {
+                console.error("Failed to load dashboard data", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadData();
+    }, []);
 
     const data = useMemo(() => {
-        let result = getMockPendaftaran();
+        let result = [...originalData];
 
         if (dateFilter !== 'all') {
             const now = new Date();
@@ -49,7 +66,7 @@ export default function DashboardDinkes() {
         }
 
         return result;
-    }, [dateFilter]);
+    }, [dateFilter, originalData]);
 
     const stats = useMemo(() => {
         const rsData = data.filter(d => d.tipe_faskes === 'RS');
@@ -95,13 +112,12 @@ export default function DashboardDinkes() {
 
     // Trend data (last 7 days)
     const trendData = useMemo(() => {
-        const allData = getMockPendaftaran();
         const days = [];
         for (let i = 6; i >= 0; i--) {
             const date = new Date();
             date.setDate(date.getDate() - i);
             const dateStr = date.toISOString().split('T')[0];
-            const count = allData.filter(d =>
+            const count = originalData.filter(d =>
                 d.tgl_masuk.split('T')[0] === dateStr
             ).length;
             days.push({
@@ -110,7 +126,7 @@ export default function DashboardDinkes() {
             });
         }
         return days;
-    }, []);
+    }, [originalData]);
 
     // Pie chart data for status distribution
     const statusPieData = useMemo(() => [

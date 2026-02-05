@@ -1,9 +1,10 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Eye, CheckCircle, Clock, XCircle } from 'lucide-react';
 import DataTable from '../../components/tables/DataTable';
 import StatusBadge from '../../components/ui/StatusBadge';
 import VerificationModal from '../../components/ui/VerificationModal';
-import { getMockPendaftaran, updatePendaftaran, STATUS, generateNoReg } from '../../data/mockData';
+import { STATUS, generateNoReg } from '../../data/mockData';
+import { fetchPendaftaran, updatePendaftaranStatus } from '../../services/pendaftaranService';
 import { useAuth } from '../../contexts/AuthContext';
 
 export default function UsulanRS() {
@@ -12,14 +13,31 @@ export default function UsulanRS() {
     const [refreshKey, setRefreshKey] = useState(0);
     const [selectedIds, setSelectedIds] = useState([]);
     const [bulkLoading, setBulkLoading] = useState(false);
+    const [allData, setAllData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const isReadOnly = user.role === 'front_office';
 
+    useEffect(() => {
+        const loadData = async () => {
+            setLoading(true);
+            try {
+                const fetched = await fetchPendaftaran();
+                setAllData(fetched);
+            } catch (error) {
+                console.error("Failed to fetch data:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadData();
+    }, [refreshKey]);
+
     const data = useMemo(() => {
-        return getMockPendaftaran().filter(d =>
+        return allData.filter(d =>
             d.tipe_faskes === 'RS' && d.status_id === 1
         );
-    }, [refreshKey]);
+    }, [allData]);
 
     const formatDate = (dateStr) => {
         if (!dateStr) return '-';
@@ -106,12 +124,16 @@ export default function UsulanRS() {
     ];
 
     const handleVerify = async (id, updates) => {
-        updatePendaftaran(id, {
-            ...updates,
-            verifikator_dinkes_id: user.id,
-            verifikator_dinkes_name: user.name
-        });
-        setRefreshKey(k => k + 1);
+        try {
+            await updatePendaftaranStatus(id, {
+                ...updates,
+                verifikator_dinkes_id: user.uid || user.id,
+                verifikator_dinkes_name: user.name
+            });
+            setRefreshKey(k => k + 1);
+        } catch (error) {
+            alert("Gagal memverifikasi: " + error.message);
+        }
     };
 
     const handleBulkAction = async (actionType) => {
@@ -142,7 +164,11 @@ export default function UsulanRS() {
                 updates.catatan_verif = 'Bulk action: Ditolak';
             }
 
-            updatePendaftaran(id, updates);
+            try {
+                await updatePendaftaranStatus(id, updates);
+            } catch (error) {
+                console.error(`Failed to update ${id}`, error);
+            }
         }
 
         // Simulate network delay

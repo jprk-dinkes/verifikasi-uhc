@@ -3,6 +3,7 @@ import { Save, Upload, Check } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { addPendaftaran, getMockPendaftaran } from '../../data/mockData';
 import { uploadToCloudinary } from '../../services/cloudinary';
+import { createPendaftaran } from '../../services/pendaftaranService';
 import './FormPendaftaran.css';
 
 export default function FormPendaftaran() {
@@ -164,7 +165,7 @@ export default function FormPendaftaran() {
                 verifikator_bpjs_name: null
             };
 
-            addPendaftaran(newEntry);
+            await createPendaftaran(newEntry);
             setLoading(false);
             setSubmitted(true);
         } catch (error) {

@@ -1,21 +1,39 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Edit3 } from 'lucide-react';
 import DataTable from '../../components/tables/DataTable';
 import StatusBadge from '../../components/ui/StatusBadge';
 import VerificationModal from '../../components/ui/VerificationModal';
-import { getMockPendaftaran, updatePendaftaran, STATUS } from '../../data/mockData';
+import { STATUS } from '../../data/mockData';
+import { fetchPendaftaran, updatePendaftaranStatus } from '../../services/pendaftaranService';
 import { useAuth } from '../../contexts/AuthContext';
 
 export default function RiwayatDinkes() {
     const { user } = useAuth();
     const [selectedData, setSelectedData] = useState(null);
     const [refreshKey, setRefreshKey] = useState(0);
+    const [allData, setAllData] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const isReadOnly = user.role === 'front_office';
 
-    const data = useMemo(() => {
-        return getMockPendaftaran().filter(d => d.status_id > 1);
+    useEffect(() => {
+        const loadData = async () => {
+            setLoading(true);
+            try {
+                const fetched = await fetchPendaftaran();
+                setAllData(fetched);
+            } catch (error) {
+                console.error("Failed to fetch data:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadData();
     }, [refreshKey]);
+
+    const data = useMemo(() => {
+        return allData.filter(d => d.status_id > 1);
+    }, [allData]);
 
     const formatDate = (dateStr) => {
         if (!dateStr) return '-';
@@ -134,12 +152,16 @@ export default function RiwayatDinkes() {
     ];
 
     const handleVerify = async (id, updates) => {
-        updatePendaftaran(id, {
-            ...updates,
-            verifikator_dinkes_id: user.id,
-            verifikator_dinkes_name: user.name
-        });
-        setRefreshKey(k => k + 1);
+        try {
+            await updatePendaftaranStatus(id, {
+                ...updates,
+                verifikator_dinkes_id: user.uid || user.id,
+                verifikator_dinkes_name: user.name
+            });
+            setRefreshKey(k => k + 1);
+        } catch (error) {
+            alert("Gagal update data: " + error.message);
+        }
     };
 
     return (
