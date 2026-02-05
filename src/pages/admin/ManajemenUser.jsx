@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Plus, Edit2, Trash2, Key, Search } from 'lucide-react';
-import { getMockUsers, addUser, updateUser, deleteUser } from '../../data/mockData';
+import { Plus, Edit2, Trash2 } from 'lucide-react';
+import { fetchUsers, createFirebaseUser, updateFirebaseUser, deleteFirebaseUser } from '../../services/userService';
 import { useAuth } from '../../contexts/AuthContext';
 import DataTable from '../../components/tables/DataTable';
 import UserFormModal from '../../components/admin/UserFormModal';
@@ -9,13 +9,25 @@ import './ManajemenUser.css';
 export default function ManajemenUser() {
     const { getRoleName } = useAuth();
     const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [refreshKey, setRefreshKey] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
 
     // Load users on mount and refresh
     useEffect(() => {
-        setUsers(getMockUsers());
+        const loadUsers = async () => {
+            setLoading(true);
+            try {
+                const data = await fetchUsers();
+                setUsers(data);
+            } catch (error) {
+                alert("Gagal mengambil data user");
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadUsers();
     }, [refreshKey]);
 
     const handleAddUser = () => {
@@ -28,28 +40,31 @@ export default function ManajemenUser() {
         setIsModalOpen(true);
     };
 
-    const handleDeleteUser = (id) => {
+    const handleDeleteUser = async (id) => {
         if (window.confirm('Apakah Anda yakin ingin menghapus user ini?')) {
-            deleteUser(id);
-            setRefreshKey(k => k + 1);
+            try {
+                await deleteFirebaseUser(id);
+                setRefreshKey(k => k + 1);
+            } catch (error) {
+                alert("Gagal menghapus user: " + error.message);
+            }
         }
     };
 
-    const handleSaveUser = (userData) => {
-        if (selectedUser) {
-            // Update existing
-            updateUser(selectedUser.id, userData);
-        } else {
-            // Create new
-            const newUser = {
-                id: `user-${Date.now()}`,
-                ...userData
-            };
-            addUser(newUser);
+    const handleSaveUser = async (userData) => {
+        try {
+            if (selectedUser) {
+                // Update existing
+                await updateFirebaseUser(selectedUser.id, userData);
+            } else {
+                // Create new
+                await createFirebaseUser(userData);
+            }
+            setIsModalOpen(false);
+            setRefreshKey(k => k + 1);
+        } catch (error) {
+            alert("Gagal menyimpan user: " + error.message);
         }
-
-        setIsModalOpen(false);
-        setRefreshKey(k => k + 1);
     };
 
     const getRoleBadgeColor = (role) => {

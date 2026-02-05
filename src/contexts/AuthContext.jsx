@@ -1,5 +1,11 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { getMockUsers } from '../data/mockData';
+import { auth, db } from '../services/firebase';
+import {
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+} from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 
 const AuthContext = createContext(null);
 
@@ -8,40 +14,75 @@ export function AuthProvider({ children }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Check for stored session
-        const stored = localStorage.getItem('uhc_user');
-        if (stored) {
-            setUser(JSON.parse(stored));
-        }
-        setLoading(false);
+        // Firebase Auth Listener
+        const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+            if (firebaseUser) {
+                try {
+                    // Fetch additional user data (role, etc) from Firestore
+                    const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
+                    if (userDoc.exists()) {
+                        setUser({
+                            uid: firebaseUser.uid,
+                            email: firebaseUser.email,
+                            ...userDoc.data()
+                        });
+                    } else {
+                        // Fallback if firestore doc missing (should not happen after migration)
+                        console.error("User document not found in Firestore");
+                        setUser(null);
+                    }
+                } catch (error) {
+                    console.error("Error fetching user profile:", error);
+                    setUser(null);
+                }
+            } else {
+                setUser(null);
+            }
+            setLoading(false);
+        });
+
+        return () => unsubscribe();
     }, []);
 
-    const login = (username, password) => {
-        const users = getMockUsers();
-        const foundUser = users.find(
-            u => u.username === username && u.password === password
-        );
+    const login = async (username, password) => {
+        try {
+            // Mapping username to email (as per migration strategy)
+            const email = username.includes('@') ? username : `${username}@verifikasi-uhc.com`;
 
-        if (foundUser) {
-            const userData = { ...foundUser };
-            delete userData.password;
-            setUser(userData);
-            localStorage.setItem('uhc_user', JSON.stringify(userData));
-            return { success: true, user: userData };
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+            // Fetch user data immediately for redirect logic
+            const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
+            let userData = {};
+            if (userDoc.exists()) {
+                userData = userDoc.data();
+            }
+
+            return { success: true, user: { ...userData, uid: userCredential.user.uid } };
+        } catch (error) {
+            console.error("Login Error:", error);
+            let errorMessage = 'Gagal login. Periksa username & password.';
+
+            if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+                errorMessage = 'Username atau password salah.';
+            } else if (error.code === 'auth/invalid-email') {
+                errorMessage = 'Format username tidak valid.';
+            } else if (error.code === 'auth/too-many-requests') {
+                errorMessage = 'Terlalu banyak percobaan gagal. Coba lagi nanti.';
+            }
+
+            return { success: false, error: errorMessage };
         }
-
-        return { success: false, error: 'Username atau password salah' };
     };
 
-    const logout = () => {
-        setUser(null);
-        localStorage.removeItem('uhc_user');
-    };
-
-    const updateProfile = (updates) => {
-        const updatedUser = { ...user, ...updates };
-        setUser(updatedUser);
-        localStorage.setItem('uhc_user', JSON.stringify(updatedUser));
+    const logout = async () => {
+        try {
+            await signOut(auth);
+            setUser(null);
+            localStorage.removeItem('uhc_user'); // Cleanup old data just in case
+        } catch (error) {
+            console.error("Logout Error:", error);
+        }
     };
 
     const getRoleName = (role) => {
@@ -80,7 +121,6 @@ export function AuthProvider({ children }) {
             loading,
             login,
             logout,
-            updateProfile,
             getRoleName,
             getDefaultRoute,
             isAuthenticated: !!user

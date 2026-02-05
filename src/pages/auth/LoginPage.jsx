@@ -22,7 +22,7 @@ export default function LoginPage() {
         // Simulate network delay
         await new Promise(resolve => setTimeout(resolve, 500));
 
-        const result = login(username, password);
+        const result = await login(username, password);
 
         if (result.success) {
             const defaultRoute = getDefaultRoute(result.user.role);
