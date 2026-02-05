@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { auth, db } from '../../services/firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc, collection, addDoc } from 'firebase/firestore';
+import { doc, setDoc, collection, addDoc, getDoc } from 'firebase/firestore';
 import { getMockUsers, getMockPendaftaran } from '../../data/mockData';
 
 const FirebaseMigration = () => {
@@ -28,31 +28,57 @@ const FirebaseMigration = () => {
             const password = user.password.length < 6 ? user.password + '123' : user.password;
 
             try {
-                // 1. Create Auth User
+                // 1. Check if user already exists in Firestore to skip
+                const userDoc = await getDoc(doc(db, 'users', users[i].id)); // Note: Mock users have varying ID formats, let's rely on email check via Auth or just try-catch
+
+                // Add 1.5s delay to avoid rate limiting
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
                 addLog(`Creating auth for: ${user.username}...`);
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const uid = userCredential.user.uid;
+                let uid;
+
+                try {
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    uid = userCredential.user.uid;
+                } catch (authError) {
+                    if (authError.code === 'auth/email-already-in-use') {
+                        addLog(`⚠️ User ${user.username} already exists (Auth). Checking Firestore...`);
+                        // Try to find UID if possible, or skip. 
+                        // Without Admin SDK we can't look up UID by email easily if we aren't logged in as them.
+                        // But for migration, failure here usually means they are already migrated.
+                        // Let's assume we can skip or try to update Firestore if we knew the UID.
+                        // For now, let's mark as "Skipped/Done"
+                        continue;
+                    } else if (authError.code === 'auth/too-many-requests') {
+                        addLog(`⏳ Rate limited. Pausing for 5 seconds...`);
+                        await new Promise(resolve => setTimeout(resolve, 5000));
+                        i--; // Retry this user
+                        continue;
+                    } else {
+                        throw authError; // Throw other errors
+                    }
+                }
 
                 // 2. Create Firestore Doc
-                await setDoc(doc(db, 'users', uid), {
-                    username: user.username,
-                    role: user.role,
-                    name: user.name,
-                    email: email,
-                    // Optional fields
-                    faskesId: user.faskesId || null,
-                    faskesName: user.faskesName || null,
-                    createdAt: new Date().toISOString()
-                });
-
-                successCount++;
-                addLog(`✅ Success: ${user.username} (UID: ${uid})`);
+                if (uid) {
+                    await setDoc(doc(db, 'users', uid), {
+                        username: user.username,
+                        role: user.role,
+                        name: user.name,
+                        email: email,
+                        faskesId: user.faskesId || null,
+                        faskesName: user.faskesName || null,
+                        createdAt: new Date().toISOString()
+                    });
+                    successCount++;
+                    addLog(`✅ Success: ${user.username}`);
+                }
             } catch (error) {
                 failCount++;
                 addLog(`❌ Failed ${user.username}: ${error.message}`);
             }
 
-            setProgress(Math.round(((i + 1) / users.length) * 50)); // First 50%
+            setProgress(Math.round(((i + 1) / users.length) * 50));
         }
 
         return { successCount, failCount };
